@@ -1,0 +1,126 @@
+<div id="recon-app">
+
+  <header class="app-header">
+    <h1>Iraq Reconciliation Engine</h1>
+    <p class="subtitle">Regulatory statement &middot; trial balance &middot; mapping reconciliation &mdash; nothing is written to a managed folder, every file is processed in memory for this session only.</p>
+  </header>
+
+  <!-- ============================== STEP 1: UPLOAD ============================== -->
+  <section class="card" id="section-upload">
+    <h2><span class="step-badge">1</span> Upload files</h2>
+    <p class="hint">Upload one or more candidate trial balances (e.g. W1, W2, W3), one financial statement / submission, and one mapping table. Files stay in this browser session only.</p>
+
+    <div class="upload-grid">
+      <div class="upload-slot" data-role="TRIAL_BALANCE">
+        <h3>Trial balance candidate(s)</h3>
+        <input type="file" class="file-input" accept=".xlsx,.xlsm" multiple />
+        <button class="btn btn-secondary upload-btn">Upload</button>
+        <ul class="file-list" data-list="TRIAL_BALANCE"></ul>
+      </div>
+
+      <div class="upload-slot" data-role="FINANCIAL_STATEMENT">
+        <h3>Financial statement / submission</h3>
+        <input type="file" class="file-input" accept=".xlsx,.xlsm" />
+        <button class="btn btn-secondary upload-btn">Upload</button>
+        <ul class="file-list" data-list="FINANCIAL_STATEMENT"></ul>
+      </div>
+
+      <div class="upload-slot" data-role="MAPPING_LOCAL">
+        <h3>Mapping table (local / Ayra / Iraq)</h3>
+        <input type="file" class="file-input" accept=".xlsx,.xlsm" />
+        <button class="btn btn-secondary upload-btn">Upload</button>
+        <ul class="file-list" data-list="MAPPING_LOCAL"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STEP 2: MAPPING VALIDATION ============================== -->
+  <section class="card" id="section-mapping">
+    <h2><span class="step-badge">2</span> Validate mapping table</h2>
+    <button class="btn btn-primary" id="btn-validate-mapping">Load &amp; validate mappings</button>
+    <div id="mapping-summary" class="summary-row"></div>
+    <div id="mapping-issues-wrap" class="table-wrap hidden">
+      <h3>Mapping validation issues</h3>
+      <table class="data-table" id="mapping-issues-table">
+        <thead><tr><th>Severity</th><th>Issue</th><th>Account</th><th>Description</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================== STEP 3: SNAPSHOT COMPARISON ============================== -->
+  <section class="card" id="section-snapshot">
+    <h2><span class="step-badge">3</span> Compare trial-balance snapshots</h2>
+    <p class="hint">Anchors compare each candidate trial balance to known amounts (optional &mdash; leave blank to skip a check). Enter reported amounts for any anchors you know, in plain numbers.</p>
+    <div id="anchor-inputs" class="anchor-grid"></div>
+    <button class="btn btn-primary" id="btn-compare-snapshots">Compare snapshots</button>
+    <div id="snapshot-results" class="table-wrap hidden">
+      <table class="data-table" id="snapshot-table">
+        <thead>
+          <tr><th></th><th>Snapshot</th><th>Exact matches</th><th>Precision matches</th><th>Total abs. variance</th><th>Value coverage</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================== STEP 4: CONFIGURE & RUN ============================== -->
+  <section class="card" id="section-run">
+    <h2><span class="step-badge">4</span> Configure &amp; run reconciliation</h2>
+    <div class="config-grid">
+      <label>Effective date <input type="date" id="cfg-effective-date" /></label>
+      <label>Precision tolerance <input type="text" id="cfg-precision" value="0.01" /></label>
+      <label>Rounding tolerance <input type="text" id="cfg-rounding" value="1" /></label>
+      <label>Materiality tolerance <input type="text" id="cfg-materiality" value="1000" /></label>
+      <label>Schedules to run <input type="text" id="cfg-schedules" placeholder="e.g. SCHEDULE_3 (blank = all)" /></label>
+    </div>
+    <button class="btn btn-primary btn-large" id="btn-run-reconciliation">Run reconciliation</button>
+    <div id="run-status" class="hint"></div>
+  </section>
+
+  <!-- ============================== STEP 5: RESULTS ============================== -->
+  <section class="card hidden" id="section-results">
+    <h2><span class="step-badge">5</span> Results</h2>
+
+    <div class="summary-tiles" id="summary-tiles"></div>
+
+    <div class="downloads-row">
+      <button class="btn btn-secondary" data-download="xlsx">Download audit report (.xlsx)</button>
+      <button class="btn btn-secondary" data-download="process_trace">Download middle process / trace (.xlsx)</button>
+      <button class="btn btn-secondary" data-download="json">Download raw result (.json)</button>
+    </div>
+
+    <h3>Line results</h3>
+    <table class="data-table" id="line-results-table">
+      <thead>
+        <tr><th></th><th>Line</th><th>Reported</th><th>Calculated</th><th>Variance</th><th>Status</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div id="line-detail-panel" class="detail-panel hidden"></div>
+
+    <h3>Schedule tie-out</h3>
+    <table class="data-table" id="schedule-results-table">
+      <thead><tr><th>Schedule</th><th>Schedule total</th><th>TB total</th><th>Statement total</th><th>Status</th></tr></thead>
+      <tbody></tbody>
+    </table>
+
+    <h3>Controls</h3>
+    <table class="data-table" id="controls-table">
+      <thead><tr><th>Control</th><th>Description</th><th>Status</th><th>Severity</th></tr></thead>
+      <tbody></tbody>
+    </table>
+
+    <h3>Exceptions</h3>
+    <table class="data-table" id="exceptions-table">
+      <thead><tr><th>Severity</th><th>Root cause</th><th>Account / Line</th><th>Likely cause</th><th>Suggested action</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <footer class="app-footer">
+    <span id="session-indicator">No session yet</span>
+  </footer>
+
+</div>
